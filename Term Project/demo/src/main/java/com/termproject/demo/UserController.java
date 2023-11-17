@@ -1,5 +1,6 @@
 package com.termproject.demo;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,10 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class UserController {
-    private final UserRepository memberRepository;
 
-    public UserController(UserRepository memberRepository) {
-        this.memberRepository = memberRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/signup")
@@ -21,8 +25,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signUp(User member) {
-        // 실제로는 비밀번호를 해싱하고 보안을 강화해야 합니다.
-        memberRepository.save(member);
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        userRepository.save(member);
         return "redirect:/login";
     }
 
@@ -31,5 +35,9 @@ public class UserController {
         return "login";
     }
 
-    // 로그인 기능은 Spring Security 등을 이용하여 구현할 수 있습니다.
+    @GetMapping("/logout")
+    public String logout() {
+        // Spring Security에서 자동으로 처리됨
+        return "redirect:/";
+    }
 }
