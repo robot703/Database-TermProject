@@ -1,18 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
     <title>Sign Up</title>
 </head>
-<body>
-    <h2>Sign Up</h2>
-    <form action="/signup" method="post">
-        <label>User ID: <input type="text" name="userid" required/></label><br/>
-        <label>Password: <input type="password" name="passwd" required/></label><br/>
-        <label>Name: <input type="text" name="name" required/></label><br/>
-        <label>Email: <input type="email" name="email" required/></label><br/>
-        <input type="submit" value="Sign Up"/>
-    </form>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Sign Up</h2>
+                <form action="/signup" method="post">
+                    <div class="form-group">
+                        <label for="userid">User ID:</label>
+                        <input type="text" class="form-control" id="userid" name="userid" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwd">Password:</label>
+                        <input type="password" class="form-control" id="passwd" name="passwd" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required/>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                </form>
+                <p class="text-center mt-3">Already have an account? <a href="/login">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"
+        integrity="sha384-Eieio6lAq8V2zEO6RSwI2WH1aVfPIrjvRarq6OHSwEFrfJ6qw5icqG2JkZXxnxW"
+        crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyEdLW5Uq2HjcFEEJOh6UwvqU02tq1pi"
+        crossorigin="anonymous"></script>
 </body>
 </html>

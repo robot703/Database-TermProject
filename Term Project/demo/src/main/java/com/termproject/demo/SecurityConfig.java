@@ -27,9 +27,10 @@ public class SecurityConfig {
             .headers((headers) -> headers
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-            .formLogin((formLogin) -> formLogin
-                .loginPage("/user/login")
-                .defaultSuccessUrl("/"))
+                    .formLogin((formLogin) -> formLogin
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/home")) // Change the default success URL
+                
             .logout((logout) -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/")
