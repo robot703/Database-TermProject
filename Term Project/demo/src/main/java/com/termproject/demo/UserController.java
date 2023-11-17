@@ -27,8 +27,9 @@ public class UserController {
     public String signUp(User member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         userRepository.save(member);
-        return "redirect:/login";
+        return "redirect:/login?signup"; // Redirect to login page with a signup parameter
     }
+    
 
     @GetMapping("/login")
     public String loginForm() {
