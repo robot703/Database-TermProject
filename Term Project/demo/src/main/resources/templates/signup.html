@@ -14,39 +14,80 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="text-center mb-4">Sign Up</h2>
-                <form action="/signup" method="post">
+                
+                <!-- 회원가입 폼 -->
+                <form th:action="@{/signup}" th:object="${userCreateForm}" method="post">
                     <div class="form-group">
                         <label for="userid">User ID:</label>
-                        <input type="text" class="form-control" id="userid" name="userid" required/>
+                        <input type="text" th:field="*{userid}" class="form-control" id="userid" name="userid" required/>
                     </div>
                     <div class="form-group">
-                        <label for="passwd">Password:</label>
-                        <input type="password" class="form-control" id="passwd" name="passwd" required/>
+                        <label for="passwd1">Password:</label>
+                        <input type="password"th:field="*{passwd1}" class="form-control" id="passwd" name="passwd" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwd2">Password Check:</label>
+                        <input type="password"th:field="*{<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>회원가입</h4>
+        </div>
+    </div>
+    <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label for="username" class="form-label">사용자ID</label>
+            <input type="text" th:field="*{username}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">사용자이름</label>
+            <input type="text" th:field="*{name}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password1" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{password1}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">비밀번호 확인</label>
+            <input type="password" th:field="*{password2}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" th:field="*{email}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+</div>
+</html>
+passwd2}" class="form-control" id="passwd" name="passwd" required/>
                     </div>
                     <div class="form-group">
                         <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required/>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" name="name" required/>
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required/>
+                        <input type="email" th:field="*{email}" class="form-control" id="email" name="email" required/>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
                 </form>
+
+                <!-- 이미 계정이 있는 경우 로그인 링크 표시 -->
                 <p class="text-center mt-3">Already have an account? <a href="/login">Login</a></p>
             </div>
         </div>
     </div>
 
-        <!-- Bootstrap JS and dependencies -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"
-        integrity="sha384-Eieio6lAq8V2zEO6RSwI2WH1aVfPIrjvRarq6OHSwEFrfJ6qw5icqG2JkZXxnxW"
-        crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyEdLW5Uq2HjcFEEJOh6UwvqU02tq1pi"
-        crossorigin="anonymous"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"
+    integrity="sha384-Eieio6lAq8V2zEO6RSwI2WH1aVfPIrjvRarq6OHSwEFrfJ6qw5icqG2JkZXxnxW"
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyEdLW5Uq2HjcFEEJOh6UwvqU02tq1pi"
+    crossorigin="anonymous"></script>
 </body>
 </html>

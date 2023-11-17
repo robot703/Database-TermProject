@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -27,10 +28,9 @@ public class SecurityConfig {
             .headers((headers) -> headers
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                     XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-                    .formLogin((formLogin) -> formLogin
-                    .loginPage("/user/login")
-                    .defaultSuccessUrl("/home")) // Change the default success URL
-                
+            .formLogin((formLogin) -> formLogin
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/"))
             .logout((logout) -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/")
