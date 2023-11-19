@@ -3,10 +3,12 @@ package com.termproject.demo.User;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+
 import org.springframework.dao.DataIntegrityViolationException;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class UserController {
 
         try {
             userService.create(userCreateForm.getUsername(), userCreateForm.getName(),
-                userCreateForm.getPassword1(), userCreateForm.getEmail());
+                    userCreateForm.getPassword1(), userCreateForm.getEmail());
 
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
@@ -49,11 +51,43 @@ public class UserController {
             return "signup_form";
         }
 
-        return "redirect:/";
+        return "login";
     }
 
     @GetMapping("/login")
     public String login() {
         return "login_form";
+    }
+
+    @GetMapping("/profile")
+    public String userProfile(Model model, Principal principal) {
+        // 현재 로그인한 사용자 정보를 모델에 추가
+        SiteUser currentUser = userService.findByUsername(principal.getName());
+        model.addAttribute("currentUser", currentUser);
+        return "profile";
+    }
+
+    @GetMapping("/edit")
+    public String editProfile(Model model, Principal principal) {
+        // 현재 로그인한 사용자 정보를 모델에 추가
+        SiteUser currentUser = userService.findByUsername(principal.getName());
+        model.addAttribute("currentUser", currentUser);
+        return "editProfile";
+    }
+
+    @PostMapping("/update")
+    public String updateProfile(@Valid @ModelAttribute("currentUser") SiteUser currentUser, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "editProfile";
+        }
+
+        userService.updateUser(currentUser);
+        return "profile";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUser(Principal principal) {
+        userService.deleteByUsername(principal.getName());
+        return "logout";
     }
 }

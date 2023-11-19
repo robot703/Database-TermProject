@@ -1,0 +1,18 @@
+<html layout:decorate="~{layout}"></html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Add your head content here -->
+</head>
+<body>
+
+<div class="container">
+    <h2>User Profile</h2>
+    <p>Name: <span th:text="${currentUser.name}"></span></p>
+    <p>Email: <span th:text="${currentUser.email}"></span></p>
+    <a href="/user/edit" class="btn btn-primary">Edit Profile</a>
+    <a href="/user/delete" class="btn btn-danger">Delete Account</a>
+</div>
+
+</body>
+</html>

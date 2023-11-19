@@ -26,7 +26,7 @@ public class UserSecurityService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자 ID가 null이거나 비어 있습니다.");
         }
 
-        Optional<SiteUser> _siteUser = this.userRepository.findByusername(username);
+        Optional<SiteUser> _siteUser = this.userRepository.findByUsername(username);
         if (_siteUser.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }

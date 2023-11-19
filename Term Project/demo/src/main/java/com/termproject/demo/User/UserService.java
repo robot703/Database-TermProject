@@ -1,11 +1,13 @@
 package com.termproject.demo.User;
 
+import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import com.termproject.demo.DataNotFoundException;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -26,12 +28,26 @@ public class UserService {
         return user;
     }
 
-    public SiteUser getUser(String userid) {
-        Optional<SiteUser> siteUser = this.userRepository.findByusername(userid);
+    public SiteUser getUser(String username) {
+        Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
         if (siteUser.isPresent()) {
             return siteUser.get();
         } else {
             throw new DataNotFoundException("siteuser not found");
         }
+    }
+
+    public SiteUser findByUsername(String username) {
+        Optional<SiteUser> userOptional = userRepository.findByUsername(username);
+        return userOptional.orElse(null);
+    }
+
+    public void updateUser(@Valid SiteUser currentUser) {
+        // 사용자 정보 업데이트 로직 추가
+        // userRepository.save(user);
+    }
+
+    public void deleteByUsername(String username) {
+        userRepository.deleteByUsername(username);
     }
 }

@@ -1,9 +1,11 @@
 package com.termproject.demo.User;
 
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface UserRepository extends CrudRepository<SiteUser, Long> {
+    Optional<SiteUser> findByUsername(String username);
 
-public interface UserRepository extends JpaRepository<SiteUser, Long> {
-        Optional<SiteUser> findByusername(String userid);
+    void deleteByUsername(String username);
 }
