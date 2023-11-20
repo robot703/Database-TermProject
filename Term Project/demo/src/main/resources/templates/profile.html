@@ -1,18 +1,6 @@
-<html layout:decorate="~{layout}"></html>
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!-- Add your head content here -->
-</head>
-<body>
-
-<div class="container">
-    <h2>User Profile</h2>
-    <p>Name: <span th:text="${currentUser.name}"></span></p>
-    <p>Email: <span th:text="${currentUser.email}"></span></p>
-    <a href="/user/edit" class="btn btn-primary">Edit Profile</a>
-    <a href="/user/delete" class="btn btn-danger">Delete Account</a>
+<div layout:fragment="content" class="container my-3">
+    <h3 th:text="${currentUser.name} + '님의 프로필'"></h3>
+    <p th:text="'사용자ID: ' + ${currentUser.username}"></p>
+    <p th:text="'이메일: ' + ${currentUser.email}"></p>
+    <a th:href="@{/user/edit}" class="btn btn-primary">프로필 수정</a>
 </div>
-
-</body>
-</html>

@@ -1,5 +1,7 @@
 package com.termproject.demo.User;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -7,9 +9,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import com.termproject.demo.DataNotFoundException;
+
 import java.security.Principal;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +26,10 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -51,7 +62,7 @@ public class UserController {
             return "signup_form";
         }
 
-        return "login";
+        return "login_form";
     }
 
     @GetMapping("/login")
@@ -59,35 +70,84 @@ public class UserController {
         return "login_form";
     }
 
-    @GetMapping("/profile")
-    public String userProfile(Model model, Principal principal) {
-        // 현재 로그인한 사용자 정보를 모델에 추가
-        SiteUser currentUser = userService.findByUsername(principal.getName());
-        model.addAttribute("currentUser", currentUser);
-        return "profile";
-    }
-
     @GetMapping("/edit")
     public String editProfile(Model model, Principal principal) {
-        // 현재 로그인한 사용자 정보를 모델에 추가
         SiteUser currentUser = userService.findByUsername(principal.getName());
         model.addAttribute("currentUser", currentUser);
         return "editProfile";
     }
 
     @PostMapping("/update")
-    public String updateProfile(@Valid @ModelAttribute("currentUser") SiteUser currentUser, BindingResult bindingResult) {
+    public String updateProfile(@Valid @ModelAttribute("currentUser") SiteUser updatedUser, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "editProfile";
         }
 
-        userService.updateUser(currentUser);
-        return "profile";
+        try {
+            userService.updateUser(updatedUser);
+        } catch (DataNotFoundException e) {
+            e.printStackTrace();
+            bindingResult.reject("updateFailed", e.getMessage());
+            return "editProfile";
+        }
+
+        return "redirect:/user/profile";
+    }
+
+    @Transactional
+    public void updateUser(SiteUser updatedUser) {
+        String currentUsername = getCurrentUsername();
+
+        SiteUser currentUser = findByUsername(currentUsername);
+
+        if (currentUser != null) {
+            currentUser.setName(updatedUser.getName());
+            currentUser.setEmail(updatedUser.getEmail());
+
+            // 비밀번호가 비어 있지 않은 경우에만 업데이트
+            if (!updatedUser.getPassword().isEmpty()) {
+                currentUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+
+            userRepository.save(currentUser);
+        } else {
+            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+    }
+
+    private SiteUser findByUsername(String currentUsername) {
+        return userService.findByUsername(currentUsername);
+    }
+
+    private String getCurrentUsername() {
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
+    @PostMapping("/delete")
+    public String deleteUser(Principal principal, Model model, HttpServletRequest request) {
+        // 현재 로그인한 사용자의 username 가져오기
+        String username = principal.getName();
+
+        // 회원 탈퇴 처리
+        userService.deleteByUsername(username);
+
+        // 세션 무효화 및 로그아웃 처리
+        request.getSession().invalidate();
+
+        // 로그아웃 후 로그인 페이지로 리다이렉트
+        return "redirect:/user/login?logout";
     }
 
     @GetMapping("/delete")
-    public String deleteUser(Principal principal) {
-        userService.deleteByUsername(principal.getName());
-        return "logout";
+    public String showDeletePage() {
+        return "login_form";
     }
+
+    @GetMapping("/profile")
+public String userProfile(Model model, Principal principal) {
+    SiteUser currentUser = userService.findByUsername(principal.getName());
+    model.addAttribute("currentUser", currentUser);
+    return "profile";
+}
 }

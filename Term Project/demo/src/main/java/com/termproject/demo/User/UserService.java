@@ -1,12 +1,16 @@
 package com.termproject.demo.User;
 
 import org.apache.catalina.User;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import com.termproject.demo.DataNotFoundException;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +51,28 @@ public class UserService {
         // userRepository.save(user);
     }
 
+    @Transactional
     public void deleteByUsername(String username) {
-        userRepository.deleteByUsername(username);
+        // 사용자가 존재하는지 확인
+        SiteUser user = findByUsername(username);
+        if (user != null) {
+            userRepository.delete(user);
+        }
+    }
+
+    public String getCurrentUsername() {
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+
+        if (authentication != null && authentication.getPrincipal() != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                username = ((UserDetails) authentication.getPrincipal()).getUsername();
+            } else {
+                // 만약 UserDetails가 아닌 경우에 대한 처리
+                username = authentication.getPrincipal().toString();
+            }
+        }
+
+        return username;
     }
 }

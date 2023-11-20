@@ -27,6 +27,9 @@
         </div>
         <button type="submit" class="btn btn-primary">로그인</button>
     </form>
+    <p class="text-center mt-3" th:if="${param.logout}">
+        로그아웃 되었습니다. 다시 로그인해 주세요.
+    </p>
     <p class="text-center mt-3">Don't have an account? <a href="/user/signup">Sign Up</a></p>
 </div>
 </html>
