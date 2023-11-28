@@ -2,6 +2,7 @@ package com.termproject.demo.answer;
 
 import java.time.LocalDateTime;
 
+import com.termproject.demo.User.SiteUser;
 import com.termproject.demo.question.Question;
 
 import jakarta.persistence.Column;
@@ -14,6 +15,9 @@ import lombok.Setter;
 import jakarta.persistence.Id;
 
 
+
+import java.util.Set;
+import jakarta.persistence.ManyToMany;
 
 @Getter
 @Setter
@@ -30,4 +34,12 @@ public class Answer {
 
     @ManyToOne
     private Question question;
+
+    @ManyToOne
+    private SiteUser author;
+
+    private LocalDateTime modifyDate;
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }
